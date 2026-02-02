@@ -73,10 +73,6 @@ A comprehensive, offline-first desktop inventory management and point-of-sale (P
 - **Printer configuration** within setup wizard
 - **Accessibility features** for ease of use
 
-## 🖼️ Screenshots
-
-> Add screenshots of your application here
-
 ## 🛠️ Tech Stack
 
 ### Frontend

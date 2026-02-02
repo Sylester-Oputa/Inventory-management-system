@@ -1,4 +1,4 @@
-# EliMed - Pharmacy Inventory & POS System
+# Pharmacy Inventory & POS System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
@@ -147,7 +147,7 @@ sudo systemctl enable postgresql
 ```bash
 # If using git
 git clone <repository-url>
-cd EliMed
+cd <your-file-name>
 
 # Or download and extract the ZIP file
 ```
@@ -160,10 +160,10 @@ cd EliMed
 psql -U postgres
 
 # Create database
-CREATE DATABASE elimed;
+CREATE DATABASE <your-db-name>;
 
 # Enable pgcrypto extension for UUIDs
-\c elimed
+\c <your-db-name>
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 # Exit psql
@@ -181,7 +181,7 @@ cd backend
 Create `backend/.env`:
 ```env
 # Database
-DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/elimed"
+DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/<your-db-name>"
 
 # Server
 PORT=4000
@@ -265,7 +265,7 @@ On first launch, you'll be guided through a setup wizard:
 
 #### Backend (`backend/.env`)
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/elimed
+DATABASE_URL=postgresql://user:password@localhost:5432/<your-db-name>
 PORT=4000
 NODE_ENV=production
 JWT_SECRET=your-secure-secret-key
@@ -334,7 +334,7 @@ The frontend automatically connects to `http://localhost:4000` in development. F
 ## 📁 Project Structure
 
 ```
-EliMed/
+<your-file-name>/
 ├── backend/                  # Express API server
 │   ├── prisma/
 │   │   ├── schema.prisma    # Database schema
@@ -590,7 +590,7 @@ The packaged application will be in:
 ```
 frontend/release/0.0.0/
 ├── win-unpacked/          # Unpacked Windows app
-└── EliMed Setup 0.0.0.exe # Windows installer
+└── <your-file-name> Setup 0.0.0.exe # Windows installer
 ```
 
 ### Build Configuration
@@ -603,7 +603,7 @@ Edit `frontend/electron-builder.json5` to customize:
 
 ### Distribution
 
-The installer (`EliMed Setup 0.0.0.exe`) can be distributed to users. It will:
+The installer (`<your-file-name> Setup 0.0.0.exe`) can be distributed to users. It will:
 - Install the application
 - Create desktop shortcut
 - Register uninstaller
@@ -687,7 +687,7 @@ If you encounter issues:
 2. Open browser DevTools (F12) for frontend errors
 3. Check `backend/logs/` for server logs
 4. Review this troubleshooting section
-5. Check database connection with: `psql -U postgres -d elimed`
+5. Check database connection with: `psql -U postgres -d <your-db-name>`
 
 ## 🤝 Contributing
 

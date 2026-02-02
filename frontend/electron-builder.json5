@@ -1,0 +1,74 @@
+// @see - https://www.electron.build/configuration/configuration
+{
+  $schema: "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  appId: "com.elimed.desktop",
+  asar: true,
+  productName: "Inventory management System",
+  icon: "build/icon.png",
+  directories: {
+    output: "release/${version}-${env.BUILD_TAG}",
+  },
+  files: ["dist", "dist-electron"],
+  extraResources: [
+    {
+      from: "../backend/dist",
+      to: "backend/dist",
+      filter: ["**/*"],
+    },
+    {
+      from: "../backend/node_modules",
+      to: "backend/node_modules",
+      filter: [
+        "@prisma/**/*",
+        ".prisma/**/*",
+        "express/**/*",
+        "cors/**/*",
+        "bcrypt/**/*",
+        "jsonwebtoken/**/*",
+        "dotenv/**/*",
+        "exceljs/**/*",
+        "date-fns/**/*",
+        "swagger-ui-express/**/*",
+        "yamljs/**/*",
+        "**/*.node",
+        "**/*.dll",
+      ],
+    },
+    {
+      from: "../backend/prisma/schema.prisma",
+      to: "backend/prisma/schema.prisma",
+    },
+    {
+      from: "../backend/prisma/migrations",
+      to: "backend/prisma/migrations",
+      filter: ["**/*"],
+    },
+    {
+      from: "../backend/package.json",
+      to: "backend/package.json",
+    },
+  ],
+  mac: {
+    target: ["dmg"],
+    artifactName: "${productName}-Mac-${version}-Installer.${ext}",
+  },
+  win: {
+    target: [
+      {
+        target: "nsis",
+        arch: ["x64"],
+      },
+    ],
+    artifactName: "${productName}-Windows-${version}-Setup.${ext}",
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+  },
+  linux: {
+    target: ["AppImage"],
+    artifactName: "${productName}-Linux-${version}.${ext}",
+  },
+}

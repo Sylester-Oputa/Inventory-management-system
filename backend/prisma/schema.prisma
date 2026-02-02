@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(uuid())
+  name             String
+  username         String     @unique
+  passwordHash     String
+  recoveryCodeHash String?
+  role             String
+  isActive         Boolean    @default(true)
+  createdAt        DateTime   @default(now())
+  stockIns         StockIn[]  @relation("userStockIns")
+  sales            Sale[]     @relation("userSales")
+  stockLots        StockLot[] @relation("userStockLots")
+}
+
+model Store {
+  id           String   @id @default(uuid())
+  name         String
+  address      String
+  phone        String
+  backupFolder String   @default("C:\\EliMed\\Backups")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  name         String
+  sellingPrice Float
+  reorderLevel Int?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  stockInItems StockInItem[]
+  stockLots    StockLot[]
+  saleItems    SaleItem[]
+
+  @@unique([name])
+}
+
+model StockIn {
+  id              String        @id @default(uuid())
+  refNo           String        @unique
+  createdBy       User          @relation("userStockIns", fields: [createdByUserId], references: [id])
+  createdByUserId String
+  createdAt       DateTime      @default(now())
+  note            String?
+  items           StockInItem[]
+}
+
+model StockInItem {
+  id         String     @id @default(uuid())
+  stockIn    StockIn    @relation(fields: [stockInId], references: [id])
+  stockInId  String
+  product    Product    @relation(fields: [productId], references: [id])
+  productId  String
+  qtyAdded   Int
+  unitCost   Float      @default(0)
+  expiryDate DateTime
+  stockLots  StockLot[]
+}
+
+model StockLot {
+  id              String              @id @default(uuid())
+  product         Product             @relation(fields: [productId], references: [id])
+  productId       String
+  stockInItem     StockInItem?        @relation(fields: [stockInItemId], references: [id])
+  stockInItemId   String?
+  lotRefNo        String
+  expiryDate      DateTime
+  qtyRemaining    Int
+  createdAt       DateTime            @default(now())
+  createdBy       User                @relation("userStockLots", fields: [createdByUserId], references: [id])
+  createdByUserId String
+  allocations     SaleLotAllocation[]
+
+  @@index([productId, expiryDate])
+}
+
+model Sale {
+  id            String              @id @default(uuid())
+  receiptNo     String              @unique
+  soldBy        User                @relation("userSales", fields: [soldByUserId], references: [id])
+  soldByUserId  String
+  soldAt        DateTime            @default(now())
+  totalAmount   Float
+  paymentMethod String?
+  note          String?
+  items         SaleItem[]
+  allocations   SaleLotAllocation[]
+}
+
+model SaleItem {
+  id          String              @id @default(uuid())
+  sale        Sale                @relation(fields: [saleId], references: [id])
+  saleId      String
+  product     Product             @relation(fields: [productId], references: [id])
+  productId   String
+  qty         Int
+  unitPrice   Float
+  lineTotal   Float
+  allocations SaleLotAllocation[]
+}
+
+model SaleLotAllocation {
+  id         String   @id @default(uuid())
+  sale       Sale     @relation(fields: [saleId], references: [id])
+  saleId     String
+  saleItem   SaleItem @relation(fields: [saleItemId], references: [id])
+  saleItemId String
+  stockLot   StockLot @relation(fields: [stockLotId], references: [id])
+  stockLotId String
+  qtyTaken   Int
+}
+
+model DailySequence {
+  id      String @id @default(uuid())
+  dateKey String
+  type    String
+  lastSeq Int    @default(0)
+
+  @@unique([dateKey, type])
+}
